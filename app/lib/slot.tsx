@@ -12,21 +12,21 @@ import { cn } from "./utils";
  * same pattern (parent defaults, child overrides).
  */
 export function Slot({
-  children,
-  className,
-  style,
-  ...props
+	children,
+	className,
+	style,
+	...props
 }: React.HTMLAttributes<HTMLElement> & { children?: React.ReactNode }) {
-  if (!isValidElement(children)) return <>{children}</>;
+	if (!isValidElement(children)) return <>{children}</>;
 
-  const child = children as React.ReactElement<
-    React.HTMLAttributes<HTMLElement>
-  >;
+	const child = children as React.ReactElement<
+		React.HTMLAttributes<HTMLElement>
+	>;
 
-  return cloneElement(child, {
-    ...props,
-    ...child.props,
-    className: cn(className, child.props.className),
-    style: { ...style, ...child.props.style },
-  });
+	return cloneElement(child, {
+		...props,
+		...child.props,
+		className: cn(className, child.props.className),
+		style: { ...style, ...child.props.style },
+	});
 }

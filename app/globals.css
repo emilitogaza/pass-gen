@@ -125,232 +125,210 @@
 
 /* Base styles */
 html {
-    scroll-behavior: smooth;
+	scroll-behavior: smooth;
 }
 
 body {
-    @apply font-[550] font-stretch-115%;
-    background-color: var(--color-primary-50);
-    color: var(--color-primary-900);
-    font-family: var(--font-primary), sans-serif;
+	@apply font-[550] font-stretch-115%;
+	background-color: var(--color-fill);
+	color: var(--color-ink);
+	font-family: var(--font-primary), sans-serif;
 }
 
 /* Prose Styles */
 .prose {
-    h1,
-    h2,
-    h3,
-    h4,
-    h5,
-    h6 {
-        @apply mt-0 mb-4 tracking-tight lg:mb-6 text-ink;
-        font-family: var(--font-primary), sans-serif;
-    }
-}
-
-.prose.prose-accent {
-    h1,
-    h2,
-    h3,
-    h4,
-    h5,
-    h6 {
-        @apply text-accent-ink;
-    }
+	h1,
+	h2,
+	h3,
+	h4,
+	h5,
+	h6 {
+		@apply mt-0 mb-4 tracking-tight lg:mb-6 text-ink;
+		font-family: var(--font-primary), sans-serif;
+	}
 }
 
 .prose.prose-night {
-    h1,
-    h2,
-    h3,
-    h4,
-    h5,
-    h6 {
-        @apply text-ink-flip;
-    }
-}
-
-.prose.prose-dawn {
-    h1,
-    h2,
-    h3,
-    h4,
-    h5,
-    h6 {
-        @apply text-accent-ink-flip;
-    }
+	h1,
+	h2,
+	h3,
+	h4,
+	h5,
+	h6 {
+		@apply text-ink-flip;
+	}
 }
 
 .prose {
-    h1 {
-        @apply mb-4 text-4xl leading-[1.1] font-[520] font-stretch-120% md:text-5xl lg:text-7xl 2xl:text-8xl;
-        &:not(:first-child) {
-            @apply mt-12;
-        }
-    }
+	h1 {
+		@apply mb-4 text-4xl leading-[1.1] font-[520] font-stretch-120% md:text-5xl lg:text-7xl 2xl:text-8xl;
+		&:not(:first-child) {
+			@apply mt-12;
+		}
+	}
 
-    h2 {
-        @apply mb-2 text-3xl leading-[1.12] font-[530] font-stretch-120% md:text-4xl lg:text-6xl 2xl:text-7xl;
-        &:not(:first-child) {
-            @apply mt-10;
-        }
-    }
+	h2 {
+		@apply mb-2 text-3xl leading-[1.12] font-[530] font-stretch-120% md:text-4xl lg:text-6xl 2xl:text-7xl;
+		&:not(:first-child) {
+			@apply mt-10;
+		}
+	}
 
-    h3 {
-        @apply mb-2 text-2xl leading-[1.14] font-[535] font-stretch-120% md:text-3xl lg:text-5xl;
-        &:not(:first-child) {
-            @apply mt-8;
-        }
-    }
+	h3 {
+		@apply mb-2 text-2xl leading-[1.14] font-[535] font-stretch-120% md:text-3xl lg:text-5xl;
+		&:not(:first-child) {
+			@apply mt-8;
+		}
+	}
 
-    h4 {
-        @apply mb-2 text-xl leading-[1.16] font-[540] font-stretch-120% md:text-2xl lg:text-4xl;
-        &:not(:first-child) {
-            @apply mt-6;
-        }
-    }
+	h4 {
+		@apply mb-2 text-xl leading-[1.16] font-[540] font-stretch-120% md:text-2xl lg:text-4xl;
+		&:not(:first-child) {
+			@apply mt-6;
+		}
+	}
 
-    h5 {
-        @apply mb-2 text-lg leading-[1.18] font-[545] font-stretch-120% md:text-xl lg:text-3xl;
-        &:not(:first-child) {
-            @apply mt-4;
-        }
-    }
+	h5 {
+		@apply mb-2 text-lg leading-[1.18] font-[545] font-stretch-120% md:text-xl lg:text-3xl;
+		&:not(:first-child) {
+			@apply mt-4;
+		}
+	}
 
-    h6 {
-        @apply mb-2 text-base leading-[1.2] font-[550] font-stretch-120% md:text-lg lg:text-2xl;
-        &:not(:first-child) {
-            @apply mt-2;
-        }
-    }
+	h6 {
+		@apply mb-2 text-base leading-[1.2] font-[550] font-stretch-120% md:text-lg lg:text-2xl;
+		&:not(:first-child) {
+			@apply mt-2;
+		}
+	}
 
-    p {
-        @apply mt-0 leading-[1.4];
-        &:not(:last-child) {
-            @apply mb-3;
-        }
-    }
+	p {
+		@apply mt-0 leading-[1.4];
+		&:not(:last-child) {
+			@apply mb-3;
+		}
+	}
 
-    strong,
-    p strong {
-        @apply font-bold;
-    }
+	strong,
+	p strong {
+		@apply font-bold;
+	}
 
-    ul {
-        @apply my-2 list-disc pl-8 leading-[1.4] md:pl-12;
-        &:last-child {
-            @apply mb-4;
-        }
-    }
+	ul {
+		@apply my-2 list-disc pl-8 leading-[1.4] md:pl-12;
+		&:last-child {
+			@apply mb-4;
+		}
+	}
 
-    ol {
-        @apply my-2 list-decimal pl-8 leading-[1.4] md:pl-12;
-        &:last-child {
-            @apply mb-4;
-        }
-    }
+	ol {
+		@apply my-2 list-decimal pl-8 leading-[1.4] md:pl-12;
+		&:last-child {
+			@apply mb-4;
+		}
+	}
 
-    li {
-        @apply my-0.5 leading-[1.4];
-        &:not(:last-child) {
-            @apply mb-2;
-        }
-    }
+	li {
+		@apply my-0.5 leading-[1.4];
+		&:not(:last-child) {
+			@apply mb-2;
+		}
+	}
 
-    blockquote {
-        @apply my-6 border-l-4 border-brand/40 pl-4 italic leading-[1.4] text-ink/80;
-    }
+	blockquote {
+		@apply my-6 border-l-4 border-brand/40 pl-4 italic leading-[1.4] text-ink/80;
+	}
 
-    a {
-        @apply font-bold leading-[1.4] text-brand no-underline underline-offset-2 transition-colors hover:underline;
-    }
+	a {
+		@apply font-bold leading-[1.4] text-brand no-underline underline-offset-2 transition-colors hover:underline;
+	}
 
-    img {
-        @apply rounded-4 first:mt-0 md:rounded-5;
-        &:not(.not-prose) {
-            @apply mt-8 mb-8 overflow-hidden md:mt-12 md:mb-10;
-        }
-    }
+	img {
+		@apply rounded-4 first:mt-0 md:rounded-5;
+		&:not(.not-prose) {
+			@apply mt-8 mb-8 overflow-hidden md:mt-12 md:mb-10;
+		}
+	}
 
-    pre {
-        @apply rounded-lg bg-fill-raised text-ink;
-    }
+	pre {
+		@apply rounded-lg bg-fill-raised text-ink;
+	}
 
-    div[data-oembed] {
-        @apply mt-8 mb-8 overflow-hidden rounded-4 md:mt-12 md:mb-10 md:rounded-5;
-        aspect-ratio: 16 / 9;
+	div[data-oembed] {
+		@apply mt-8 mb-8 overflow-hidden rounded-4 md:mt-12 md:mb-10 md:rounded-5;
+		aspect-ratio: 16 / 9;
 
-        iframe {
-            width: 100%;
-            height: 100%;
-        }
-    }
+		iframe {
+			width: 100%;
+			height: 100%;
+		}
+	}
 }
 
 /* Override prose font sizes when used inline */
 .prose.prose-inherit-size {
-    h1,
-    h2,
-    h3,
-    h4,
-    h5,
-    h6,
-    p {
-        font-size: inherit;
-    }
+	h1,
+	h2,
+	h3,
+	h4,
+	h5,
+	h6,
+	p {
+		font-size: inherit;
+	}
 }
 
 /* Animations */
 @keyframes wiggle-grow {
-    0% {
-        transform: rotate(0deg) scale(1);
-    }
-    30% {
-        transform: rotate(8deg) scale(1.08);
-    }
-    50% {
-        transform: rotate(-6deg) scale(1.03);
-    }
-    70% {
-        transform: rotate(4deg) scale(1.01);
-    }
-    85% {
-        transform: rotate(-2deg) scale(1);
-    }
-    100% {
-        transform: rotate(0deg) scale(1);
-    }
+	0% {
+		transform: rotate(0deg) scale(1);
+	}
+	30% {
+		transform: rotate(8deg) scale(1.08);
+	}
+	50% {
+		transform: rotate(-6deg) scale(1.03);
+	}
+	70% {
+		transform: rotate(4deg) scale(1.01);
+	}
+	85% {
+		transform: rotate(-2deg) scale(1);
+	}
+	100% {
+		transform: rotate(0deg) scale(1);
+	}
 }
 
 @keyframes marquee-x {
-    0% {
-        transform: translateX(0);
-    }
-    100% {
-        transform: translateX(-50%);
-    }
+	0% {
+		transform: translateX(0);
+	}
+	100% {
+		transform: translateX(-50%);
+	}
 }
 
 @keyframes marquee-y {
-    0% {
-        transform: translateY(0);
-    }
-    100% {
-        transform: translateY(-50%);
-    }
+	0% {
+		transform: translateY(0);
+	}
+	100% {
+		transform: translateY(-50%);
+	}
 }
 
 /* Lucide icons */
 /* Non-scaling stroke so icons stay same thickness at any size */
 .lucide,
 .lucide * {
-    vector-effect: non-scaling-stroke;
-    stroke-width: var(--stroke-width);
+	vector-effect: non-scaling-stroke;
+	stroke-width: var(--stroke-width);
 }
 
 /* Bold variant, same non-scaling behaviour, but a thikker boy */
 svg.icon-bold,
 svg.icon-bold * {
-    vector-effect: non-scaling-stroke !important;
-    stroke-width: 2.5 !important;
+	vector-effect: non-scaling-stroke;
+	stroke-width: 2.5;
 }

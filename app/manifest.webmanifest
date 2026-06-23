@@ -1,0 +1,49 @@
+{
+	"name": "Pass Gen",
+	"short_name": "Pass Gen",
+	"description": "TODO: Add your project description here.",
+	"start_url": "/",
+	"id": "TODO-your-domain.com/v1.0.0",
+	"display": "standalone",
+	"background_color": "hsl(228, 100%, 95%)",
+	"theme_color": "hsl(228, 100%, 57%)",
+	"orientation": "portrait",
+	"launch_handler": {
+		"client_mode": ["focus-existing", "auto"]
+	},
+	"dir": "ltr",
+	"lang": "en",
+	"prefer_related_applications": false,
+	"scope": "/",
+	"display_override": ["window-controls-overlay", "standalone", "browser"],
+	"icons": [
+		{
+			"src": "/icons/icon-192x192.png",
+			"sizes": "192x192",
+			"type": "image/png"
+		},
+		{
+			"src": "/icons/icon-512x512.png",
+			"sizes": "512x512",
+			"type": "image/png"
+		},
+		{
+			"src": "/icons/icon-192x192-maskable.png",
+			"sizes": "192x192",
+			"type": "image/png",
+			"purpose": "maskable"
+		},
+		{
+			"src": "/icons/icon-512x512-maskable.png",
+			"sizes": "512x512",
+			"type": "image/png",
+			"purpose": "maskable"
+		},
+		{
+			"src": "/icons/icon.svg",
+			"sizes": "any",
+			"type": "image/svg+xml",
+			"purpose": "any"
+		}
+	]
+}

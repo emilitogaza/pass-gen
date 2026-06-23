@@ -12,5 +12,5 @@ import { domAnimation, LazyMotion } from "motion/react";
  * so all child components share a single feature bundle load.
  */
 export function MotionProvider({ children }: { children: React.ReactNode }) {
-  return <LazyMotion features={domAnimation}>{children}</LazyMotion>;
+	return <LazyMotion features={domAnimation}>{children}</LazyMotion>;
 }
