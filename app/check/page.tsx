@@ -12,9 +12,9 @@ export default function CheckPage() {
 	return (
 		<main className="mx-auto flex w-full max-w-2xl flex-1 flex-col gap-10 px-5 py-16 sm:py-24">
 			<header className="flex flex-col gap-4">
-				<span className="inline-flex w-fit items-center gap-2 rounded-full border border-border bg-fill-raised/60 px-3 py-1.5 text-xs font-[560] text-ink-dim">
-					<ShieldQuestion className="size-3.5" />
-					Checked locally · never leaves your device
+				<span className="inline-flex w-fit items-center gap-2 rounded-3 border border-border bg-fill-raised/60 px-4 py-2 font-[560] text-ink-dim">
+					<ShieldQuestion className="size-5" />
+					Checked locally · Never leaves your device
 				</span>
 				<h1 className="text-4xl font-[600] tracking-tight text-ink sm:text-5xl">
 					Check a password

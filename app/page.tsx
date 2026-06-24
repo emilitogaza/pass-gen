@@ -1,4 +1,5 @@
 import { LockKeyhole } from "lucide-react";
+import Link from "next/link";
 import { Generator } from "@/components/generator";
 
 export default function Home() {
@@ -20,9 +21,17 @@ export default function Home() {
 
 			<Generator />
 
-			<footer className="mt-auto pt-6 text-sm text-center text-ink-dim/60">
-				Everything runs in your browser. No passwords are sent, stored, or
-				logged anywhere.
+			<footer className="mt-auto flex flex-col items-center gap-3 pt-6 text-sm text-center text-ink-dim/60">
+				<Link
+					href="/check"
+					className="font-[560] text-ink-dim underline-offset-4 decoration-2 transition-colors hover:text-ink hover:underline"
+				>
+					Check your password →
+				</Link>
+				<span>
+					Everything runs in your browser. No passwords are sent, stored, or
+					logged anywhere.
+				</span>
 			</footer>
 		</main>
 	);

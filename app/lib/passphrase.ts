@@ -8,8 +8,8 @@
  * transform seed) stable while the user tweaks deterministic settings and sees
  * the result update live:
  *   - `randomWords` / `randomDigits` / `randomTransformSeed` — random material
- *   - `composePassphrase` — pure given its inputs: merges user words with the
- *     random material, applies transforms, and reports HONEST structural entropy.
+ *   - `composePassphrase` — pure given its inputs: assembles the random material
+ *     and applies the transforms. Strength is scored separately on the result.
  *
  * Honesty note on transforms: a *deterministic* transform (always capitalise
  * the first letter, always swap every o→0) adds ≈0 real bits, because password
@@ -36,9 +36,6 @@ export interface PassphraseOptions {
 
 export interface PassphraseResult {
 	passphrase: string;
-	/** How many words came from the random material vs. the user. */
-	randomCount: number;
-	userCount: number;
 }
 
 /** letter → number substitutions. */
@@ -121,10 +118,11 @@ export function randomTransformSeed(n = 256): number[] {
 }
 
 /**
- * Build the final passphrase from user words + pre-generated random material.
+ * Build the final passphrase from pre-generated random material.
  *
- * User words fill the leading slots; remaining slots come from `randomFill`
- * (kept stable by the caller). Transforms are applied per character.
+ * Words come from `randomFill` (kept stable by the caller); transforms are
+ * applied per character. To use their own words, the user simply edits the
+ * output directly — the editable field is the one source of custom text.
  *
  * This only *builds the string* — strength is measured separately by scoring
  * that string (see `wordAwareEntropy`), so generated and hand-typed passwords
@@ -134,23 +132,15 @@ export function randomTransformSeed(n = 256): number[] {
  * rather than fresh randomness, so the result is stable and memoisable.
  */
 export function composePassphrase(
-	userWords: string[],
 	randomFill: string[],
 	numberSuffix: string,
 	options: PassphraseOptions,
 	transformSeed: number[] = [],
 ): PassphraseResult {
-	const userClean = userWords
-		.map((w) => w.trim().toLowerCase())
-		.filter(Boolean);
-
 	const words: string[] = [];
 	for (let i = 0; i < options.wordCount; i++) {
-		words.push(userClean[i] ?? randomFill[i] ?? "word");
+		words.push(randomFill[i] ?? "word");
 	}
-
-	const userCount = Math.min(userClean.length, options.wordCount);
-	const randomCount = options.wordCount - userCount;
 
 	let seedPos = 0;
 	const nextSeed = () =>
@@ -211,8 +201,6 @@ export function composePassphrase(
 
 	return {
 		passphrase: parts.join(options.separator),
-		randomCount,
-		userCount,
 	};
 }
 
@@ -239,7 +227,10 @@ export function applyTextTransforms(
 	if (options.capitalization === "all") {
 		out = out.toUpperCase();
 	} else if (options.capitalization === "first") {
-		out = out.replace(/\p{L}+/gu, (w) => w.charAt(0).toUpperCase() + w.slice(1));
+		out = out.replace(
+			/\p{L}+/gu,
+			(w) => w.charAt(0).toUpperCase() + w.slice(1),
+		);
 	}
 
 	if (options.swapNumbers || options.swapSymbols) {
