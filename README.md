@@ -1,11 +1,28 @@
 # pass-gen
 
-A small, **fully local** password generator. It helps you build a strong password
-you can actually remember — from a sentence or from random words — and shows you
-how long it would take to crack as you type.
+A small, **fully local** password generator. It helps you build strong memorable passwords, from a sentence or from random words.
 
-Everything runs in your browser. No passwords are sent, stored, or logged
-anywhere; randomness comes from the Web Crypto API (`crypto.getRandomValues`).
+Everything runs in your browser. There's no backend, no telemetry, and no storage,
+so every byte stays on your machine. 
+
+Randomness comes from the Web Crypto API (`crypto.getRandomValues`) with rejection sampling, so word and character stay perfectly uniform. Strength is scored live against an offline fast-hash attack, ~10 B guesses/sec.
+
+There's also a [`/check`](app/check/page.tsx) page where you can paste any existing
+password and see how long it would take to crack, also estimated on different
+devices, for fun.
+
+### What is entropy?
+
+Entropy measures how unpredictable a password is, in **bits**. Each bit doubles the
+number of guesses an attacker needs, so a 60-bit password takes twice as long to
+crack as a 59-bit one. It's computed from the *generation space* (how many possible
+passwords the chosen options could produce), not from the characters you happen to
+end up with, which is what makes the crack-time estimate trustworthy.
+
+A passphrase like `correct-horse-battery-staple` works because each word is drawn
+uniformly from a large list. Four random words from a 7,776-word list is about 51
+bits of entropy, all while staying far easier to remember than a random string of
+the same strength.
 
 ## What you can do
 
@@ -60,22 +77,3 @@ Open [http://localhost:3000](http://localhost:3000).
 > Note: `app/globals.css` and `*.svg` assets are excluded from Biome —
 > the CSS uses Tailwind v4 directives Biome can't parse, and the SVGs are
 > static icon assets.
-
-## Project layout
-
-```
-app/
-  page.tsx              # Landing page
-  components/
-    generator.tsx       # Mode switcher (mnemonic / passphrase)
-    mnemonic-panel.tsx
-    passphrase-panel.tsx
-    strength-meter.tsx
-    password-output.tsx
-    controls.tsx        # Reusable segmented controls, etc.
-  lib/
-    mnemonic.ts         # Sentence → first-letter password
-    passphrase.ts       # Random word passphrase + transforms
-    crack-time.ts       # Entropy + crack-time estimation
-    dictionary.ts       # Word list for passphrases
-```
