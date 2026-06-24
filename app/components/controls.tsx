@@ -130,7 +130,7 @@ export function Stepper({
 }) {
   const clamp = (n: number) => Math.min(max, Math.max(min, n));
   const stepBtn =
-    "grid h-full aspect-square shrink-0 place-items-center rounded-2 text-ink transition-colors cursor-pointer hover:bg-fill-raised disabled:opacity-30 disabled:hover:bg-transparent focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-brand";
+    "grid h-full w-full place-items-center rounded-2 text-ink transition-colors cursor-pointer hover:bg-fill-raised disabled:opacity-30 disabled:hover:bg-transparent focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-brand";
 
   return (
     <div className="flex items-center gap-1 rounded-3 border border-border bg-fill p-1 h-16">
@@ -143,7 +143,7 @@ export function Stepper({
       >
         <Minus className="size-4" />
       </button>
-      <span className="min-w-0 flex-1 text-center text-base font-[600] text-ink tabular-nums">
+      <span className="min-w-24 flex-1 text-center text-base font-[600] text-ink tabular-nums">
         {value}
       </span>
       <button
