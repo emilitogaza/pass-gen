@@ -1,18 +1,11 @@
 /**
- * Lightweight, fully-local password strength estimation.
+ * Crack-time presentation helpers, shared across the app.
  *
- * Everything here is pure math on the password string / structure — nothing
- * ever leaves the browser. Two entropy sources are exposed:
- *
- *  - `charsetEntropy`  — naive character-pool estimate, used for the
- *    free-form mnemonic password.
- *  - the passphrase module supplies its own structural entropy (word count ×
- *    log2(dictionary size) + bonuses) and feeds it to `crackEstimate`.
- *  - `wordAwareEntropy` — dictionary-aware estimate for a hand-edited
- *    passphrase, so manual tweaks update the crack time honestly.
+ * Actual strength scoring is done by zxcvbn (see `strength.ts`); this module
+ * turns an entropy figure into human-readable time, device comparisons, and a
+ * 0–5 strength band. `charsetEntropy` remains as a cheap fallback used only
+ * until the zxcvbn bundle has finished loading.
  */
-
-import { NUMBER_MAP, SYMBOL_MAP } from "./passphrase";
 
 /** Guesses per second assumed for an offline attack on a fast hash. */
 const GUESSES_PER_SECOND = 1e10;
@@ -66,64 +59,6 @@ export function charsetEntropy(password: string): number {
 	if (/\s/.test(password)) pool += 1;
 	if (pool === 0) return 0;
 	return password.length * Math.log2(pool);
-}
-
-// Reverse leet: a substituted char → the letter it stands in for.
-const REVERSE_LEET: Record<string, string> = (() => {
-	const r: Record<string, string> = {};
-	for (const [letter, sub] of Object.entries(NUMBER_MAP)) r[sub] = letter;
-	for (const [letter, sub] of Object.entries(SYMBOL_MAP)) r[sub] = letter;
-	return r;
-})();
-
-/**
- * Word-aware entropy for a passphrase-shaped string. Used once the user has
- * hand-edited the generated password, where the structural figure no longer
- * applies. Tokens are split on the usual word separators (so leet symbols stay
- * *inside* words), each token is "un-leeted" back to letters and checked
- * against the dictionary:
- *   - a recognised word costs log2(dictionary size), plus ~1 bit per position
- *     the attacker must still guess (an uppercase letter or a substitution) —
- *     i.e. the size of the mangling-rule space around that word.
- *   - a pure digit run costs log2(10) per digit.
- *   - anything unrecognised falls back to the character-pool estimate.
- */
-export function wordAwareEntropy(
-	password: string,
-	dictionary: Set<string>,
-	dictSize: number,
-): number {
-	if (!password) return 0;
-	const perWord = dictSize > 1 ? Math.log2(dictSize) : 0;
-	let bits = 0;
-
-	for (const token of password.split(/[-._\s]+/)) {
-		if (!token) continue;
-		if (/^[0-9]+$/.test(token)) {
-			bits += token.length * Math.log2(10);
-			continue;
-		}
-
-		const base = [...token]
-			.map((c) => REVERSE_LEET[c] ?? c)
-			.join("")
-			.toLowerCase()
-			.replace(/[^a-zåäö]/g, "");
-
-		if (base && dictionary.has(base)) {
-			let varied = 0;
-			for (const c of token) {
-				if (/[A-ZÅÄÖ]/.test(c))
-					varied++; // an uppercase letter to place
-				else if (REVERSE_LEET[c] && !/[a-zåäö]/i.test(c)) varied++; // a substitution
-			}
-			bits += perWord + varied;
-		} else {
-			bits += charsetEntropy(token);
-		}
-	}
-
-	return bits;
 }
 
 const STRENGTH_TABLE: {

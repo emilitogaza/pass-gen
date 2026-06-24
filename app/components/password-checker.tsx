@@ -3,12 +3,16 @@
 import { useMemo, useState } from "react";
 import { Textarea } from "@/components/input";
 import { StrengthMeter } from "@/components/strength-meter";
-import { charsetEntropy, crackEstimate } from "@/lib/crack-time";
+import { useStrength } from "@/lib/use-strength";
 
 export function PasswordChecker() {
 	const [text, setText] = useState("");
+	const scoreStrength = useStrength();
 
-	const estimate = useMemo(() => crackEstimate(charsetEntropy(text)), [text]);
+	const estimate = useMemo(
+		() => scoreStrength(text),
+		[text, scoreStrength],
+	);
 
 	return (
 		<div className="flex flex-col gap-5">

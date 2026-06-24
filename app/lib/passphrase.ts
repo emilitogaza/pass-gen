@@ -36,8 +36,6 @@ export interface PassphraseOptions {
 
 export interface PassphraseResult {
 	passphrase: string;
-	/** Honest structural entropy in bits. */
-	entropyBits: number;
 	/** How many words came from the random material vs. the user. */
 	randomCount: number;
 	userCount: number;
@@ -122,15 +120,15 @@ export function randomTransformSeed(n = 256): number[] {
 	return Array.from({ length: n }, () => secureInt(0x100000000));
 }
 
-const LOG2_10 = Math.log2(10);
-
 /**
  * Build the final passphrase from user words + pre-generated random material.
  *
  * User words fill the leading slots; remaining slots come from `randomFill`
- * (kept stable by the caller). Transforms are applied per character, and the
- * structural entropy is accumulated as we go so it stays exactly consistent
- * with what was actually produced.
+ * (kept stable by the caller). Transforms are applied per character.
+ *
+ * This only *builds the string* — strength is measured separately by scoring
+ * that string (see `wordAwareEntropy`), so generated and hand-typed passwords
+ * are judged by one and the same logic.
  *
  * Pure given its inputs: the random transforms read from `transformSeed`
  * rather than fresh randomness, so the result is stable and memoisable.
@@ -140,7 +138,6 @@ export function composePassphrase(
 	randomFill: string[],
 	numberSuffix: string,
 	options: PassphraseOptions,
-	dictSize: number,
 	transformSeed: number[] = [],
 ): PassphraseResult {
 	const userClean = userWords
@@ -155,10 +152,6 @@ export function composePassphrase(
 	const userCount = Math.min(userClean.length, options.wordCount);
 	const randomCount = options.wordCount - userCount;
 
-	// Base entropy: the random word choices, plus a conservative flat 8 bits for
-	// each user-supplied word (secret to an attacker, but not uniformly random).
-	const perWord = dictSize > 1 ? Math.log2(dictSize) : 0;
-	let transformBits = 0;
 	let seedPos = 0;
 	const nextSeed = () =>
 		transformSeed.length ? transformSeed[seedPos++ % transformSeed.length] : 0;
@@ -183,9 +176,7 @@ export function composePassphrase(
 					: lower;
 
 			if (options.randomSwap) {
-				// Options the attacker must consider: both case forms (only random caps
-				// adds a second form) plus any available substitutes. One is chosen
-				// from the stable seed, contributing log2(#options) real bits.
+				// Randomly pick between the letter's case form(s) and any substitutes.
 				const baseForms =
 					options.capitalization === "random"
 						? [lower, lower.toUpperCase()]
@@ -195,11 +186,9 @@ export function composePassphrase(
 				if (SYMBOL_MAP[lower]) subs.push(SYMBOL_MAP[lower]);
 				const choices = [...baseForms, ...subs];
 				out += choices[nextSeed() % choices.length];
-				transformBits += Math.log2(choices.length);
 				continue;
 			}
 
-			// Deterministic swaps — fixed and predictable, so 0 added bits.
 			let swapped: string | undefined;
 			if (options.swapNumbers) swapped = NUMBER_MAP[lower];
 			if (!swapped && options.swapSymbols) swapped = SYMBOL_MAP[lower];
@@ -209,9 +198,7 @@ export function composePassphrase(
 			}
 
 			if (options.capitalization === "random") {
-				const upper = nextSeed() % 2 === 1;
-				out += upper ? lower.toUpperCase() : lower;
-				transformBits += 1; // one genuinely random bit per letter
+				out += nextSeed() % 2 === 1 ? lower.toUpperCase() : lower;
 			} else {
 				out += deterministicCase;
 			}
@@ -222,14 +209,49 @@ export function composePassphrase(
 	let parts = words.map(transformWord);
 	if (options.appendNumber && numberSuffix) parts = [...parts, numberSuffix];
 
-	const baseBits = randomCount * perWord + userCount * 8;
-	const numberBits =
-		options.appendNumber && numberSuffix ? numberSuffix.length * LOG2_10 : 0;
-
 	return {
 		passphrase: parts.join(options.separator),
-		entropyBits: baseBits + transformBits + numberBits,
 		randomCount,
 		userCount,
 	};
+}
+
+/**
+ * Apply the *deterministic* transforms (capitalisation + letter swaps) directly
+ * to an arbitrary string. Used for the hand-edited output so toggling "swap all"
+ * or capitalisation transforms the text the user typed, instead of throwing it
+ * away and regenerating.
+ *
+ * Only the deterministic options are honoured here — random capitalisation and
+ * the random swap belong to generation, not to a string you typed. The function
+ * is idempotent, so it stays stable as the edited value flows back through it.
+ */
+export function applyTextTransforms(
+	text: string,
+	options: {
+		capitalization: Capitalization;
+		swapNumbers: boolean;
+		swapSymbols: boolean;
+	},
+): string {
+	let out = text;
+
+	if (options.capitalization === "all") {
+		out = out.toUpperCase();
+	} else if (options.capitalization === "first") {
+		out = out.replace(/\p{L}+/gu, (w) => w.charAt(0).toUpperCase() + w.slice(1));
+	}
+
+	if (options.swapNumbers || options.swapSymbols) {
+		out = [...out]
+			.map((ch) => {
+				const lower = ch.toLowerCase();
+				if (options.swapNumbers && NUMBER_MAP[lower]) return NUMBER_MAP[lower];
+				if (options.swapSymbols && SYMBOL_MAP[lower]) return SYMBOL_MAP[lower];
+				return ch;
+			})
+			.join("");
+	}
+
+	return out;
 }

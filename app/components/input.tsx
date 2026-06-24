@@ -4,7 +4,7 @@ import { cn } from "@/lib/utils";
 
 const fieldClasses = cn(
 	"w-full min-w-0 outline-0",
-	"rounded-2 border border-fill-dark",
+	"rounded-3 border border-fill-dark",
 	"bg-fill/80 text-base text-ink",
 	"placeholder:text-ink/40",
 	"hover:outline-4 hover:outline-brand/30",
@@ -19,7 +19,7 @@ function Input({ className, type, ...props }: React.ComponentProps<"input">) {
 		<input
 			type={type}
 			data-slot="input"
-			className={cn(fieldClasses, "flex h-14 px-4 py-1", className)}
+			className={cn(fieldClasses, "flex h-16 px-4 py-1", className)}
 			{...props}
 		/>
 	);
